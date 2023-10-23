@@ -1,26 +1,30 @@
 package com.scaler.EcomProductService.controller;
 
 import com.scaler.EcomProductService.dto.ProductListResponseDTO;
+import com.scaler.EcomProductService.dto.ProductRequestDTO;
 import com.scaler.EcomProductService.dto.ProductResponseDTO;
-import com.scaler.EcomProductService.model.Product;
 import com.scaler.EcomProductService.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class ProductController {
 
-    @Autowired
-    @Qualifier("fakeStoreProductService")
-    private ProductService productService;
+    private final ProductService productService; // immutable
 
+    @Autowired // Autowired for constructor injection is optional from Spring 4.x+ onwards
+    public ProductController(@Qualifier("fakeStoreProductService") ProductService productService) {
+        this.productService = productService;
+    }
+
+    /**
+    Field Injection
+ //    @Autowired
+ //    @Qualifier("fakeStoreProductService")
+ //    private ProductService productService;
+ */
 
     @GetMapping("/products")
     public ResponseEntity getAllProducts(){
@@ -48,8 +52,8 @@ public class ProductController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/products/1")
-    public ResponseEntity getProductFromId(){
+    @GetMapping("/products/{id}")
+    public ResponseEntity getProductFromId(@PathVariable("id") int id){
         /*
         ProductResponseDTO p1 =  new ProductResponseDTO();
         p1.setId(1);
@@ -70,10 +74,21 @@ public class ProductController {
         List<ProductResponseDTO> products = Arrays.asList(p1, p2);
         return ResponseEntity.ok(products);
         */
-        ProductResponseDTO response = productService.getProductById(1);
+        ProductResponseDTO response = productService.getProductById(id);
         return ResponseEntity.ok(response);
     }
 
+    @PostMapping("/products")
+    public ResponseEntity createProduct(@RequestBody ProductRequestDTO productRequestDTO){
+        ProductResponseDTO responseDTO = productService.createProduct(productRequestDTO);
+        return ResponseEntity.ok(responseDTO);
+    }
+
+    @DeleteMapping("/products/{id}")
+    public ResponseEntity deleteProductById(@PathVariable("id") int id){
+        boolean response = productService.deleteProduct(id);
+        return ResponseEntity.ok(response);
+    }
 }
 /*
     Domain Name -> IP+Port -> OS in server -> port is binded to process -> Tomcat is binded to 8080
