@@ -58,3 +58,11 @@ VideoStoreCreateVideoRequestDTO : VideoStoreClient -> VideoIngestionService
 VideoIngestionService
 
 VideoStore -> only to store the videos : platform DB
+
+Calling any 3rd party
+
+Repo -> Service -> Controller
+Client -> Service -> Controller
+
+Development Cycle -> local, dev[dev instances], UAT/QA/staging[prod replica], prod
+UAT -> User Acceptance Testing
