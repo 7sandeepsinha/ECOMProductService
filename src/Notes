@@ -13,3 +13,48 @@
 3. Updated the service layer for new APIs
 4. Wrote a small intro to Controller Advice
 
+
+
+Controller -> RequestDTO, ResponseDTO
+CreateProductRequestDTO, -> has all attributes except "id"
+ProductResponseDTO -> has all the attributes
+--------------------------------------------------------------------------------
+Client -> RequestDTO, ResponseDTO
+FakeStoreCreateProductRequestDTO -> has all attributes except "id"
+FakeStoreProductResponseDTO -> has all the attributes
+
+
+Youtube
+
+user uploads a video -> VideoIngestionService -> VideoStore
+
+VideoUploadRequestDTO : controller -> VideoIngestionService
+    name
+    description
+    thumbnail
+    bookmarks
+    videoFile
+    format
+    uploadedAt
+    uploadedBy
+
+VideoStoreCreateVideoRequestDTO : VideoStoreClient -> VideoIngestionService
+    name
+    description
+    thumbnail
+    bookmarks
+    videoFile
+    format
+    uploadedAt
+    uploadedBy
+    tags
+    topics
+    constant for algo
+    List<Resolutions>
+
+
+
+
+VideoIngestionService
+
+VideoStore -> only to store the videos : platform DB

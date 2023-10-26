@@ -3,6 +3,7 @@ package com.scaler.EcomProductService.controller;
 import com.scaler.EcomProductService.dto.ProductListResponseDTO;
 import com.scaler.EcomProductService.dto.ProductRequestDTO;
 import com.scaler.EcomProductService.dto.ProductResponseDTO;
+import com.scaler.EcomProductService.exception.ProductNotFoundException;
 import com.scaler.EcomProductService.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -53,7 +54,7 @@ public class ProductController {
     }
 
     @GetMapping("/products/{id}")
-    public ResponseEntity getProductFromId(@PathVariable("id") int id){
+    public ResponseEntity getProductFromId(@PathVariable("id") int id) throws ProductNotFoundException {
         /*
         ProductResponseDTO p1 =  new ProductResponseDTO();
         p1.setId(1);
