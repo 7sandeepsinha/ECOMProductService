@@ -66,3 +66,14 @@ Client -> Service -> Controller
 
 Development Cycle -> local, dev[dev instances], UAT/QA/staging[prod replica], prod
 UAT -> User Acceptance Testing
+
+
+
+Configuration Details -
+ddl.auto -> create, update, verify
+Create : everytime you start the application, it will drop all the tables and recreate them. High chances of losing data.
+Update : everyime you start the application, only the update changes are implemented.
+Verify : it does not create/udpate anything, it just verifies if the DB has all the tables/columns/mappings as mentioned in the entities. -> Generally used in companies, for production
+
+Local development -> create or update
+Production -> verify [ generally tables via separate scripts like FlyWay, Liquibase ]
