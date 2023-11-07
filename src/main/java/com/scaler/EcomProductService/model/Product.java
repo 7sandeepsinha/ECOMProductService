@@ -6,7 +6,6 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import lombok.Getter;
 import lombok.Setter;
-import org.aspectj.weaver.ast.Or;
 
 import java.util.List;
 
@@ -17,14 +16,22 @@ public class Product extends BaseModel{
     private String title;
     private String description;
     private String image;
-    @ManyToOne
-    private Category category;
     @OneToOne
     private Price price;
+    @ManyToOne
+    private Category category;
 }
 /*
     Product - Category : M : 1
     1         1
     M         1
     M         1
+
+    Category
+        List<Product>
+
+    Product
+        Category
+
+    1 > M
  */

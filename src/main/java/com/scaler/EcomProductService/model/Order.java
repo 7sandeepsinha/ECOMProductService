@@ -9,8 +9,9 @@ import java.util.List;
 @Data
 @Entity(name = "ECOM_ORDER")
 public class Order extends BaseModel{
+    private double price;
     @ManyToMany
-    private List<Product> products;
+    private List<Product> products; // ECOM_ORDER_PRODUCTS
 }
 
 /*

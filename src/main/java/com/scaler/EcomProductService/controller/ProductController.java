@@ -16,7 +16,7 @@ public class ProductController {
     private final ProductService productService; // immutable
 
     @Autowired // Autowired for constructor injection is optional from Spring 4.x+ onwards
-    public ProductController(@Qualifier("fakeStoreProductService") ProductService productService) {
+    public ProductController(@Qualifier("productService") ProductService productService) {
         this.productService = productService;
     }
 
@@ -76,6 +76,32 @@ public class ProductController {
         return ResponseEntity.ok(products);
         */
         ProductResponseDTO response = productService.getProductById(id);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/products/title/{title}")
+    public ResponseEntity getProductFromTitle(@PathVariable("title") String title) throws ProductNotFoundException {
+        /*
+        ProductResponseDTO p1 =  new ProductResponseDTO();
+        p1.setId(1);
+        p1.setTitle("Iphone 15 pro");
+        p1.setPrice(150000);
+        p1.setImage("www.google.com/images/iphone");
+        p1.setDescription("Kafi Mehnga phone");
+        p1.setCategory("Electronics");
+
+        ProductResponseDTO p2 =  new ProductResponseDTO();
+        p2.setId(2);
+        p2.setTitle("Macbook Pro");
+        p2.setPrice(250000);
+        p2.setImage("www.google.com/images/macbook");
+        p2.setDescription("Kafi Mehnga laptop");
+        p2.setCategory("Electronics");
+
+        List<ProductResponseDTO> products = Arrays.asList(p1, p2);
+        return ResponseEntity.ok(products);
+        */
+        ProductResponseDTO response = productService.findProductByTitle(title);
         return ResponseEntity.ok(response);
     }
 
