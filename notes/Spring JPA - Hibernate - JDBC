@@ -213,3 +213,52 @@ public class Main {
     - **Cons**: Might be overkill for very simple applications, hides many complexities which might be a pro or a con based on the scenario.
 
 Overall, each level of abstraction reduces the amount of boilerplate code and manual configuration at the cost of direct control over the underlying operations. The choice between them often depends on the specific requirements and complexity of the project.
+
+CASCADE
+ALL -> All operations are cascaded
+PERSIST -> save operations are cascaded
+MERGE -> updates are cascaded
+REMOVE -> deletes are cascaded
+REFRESH -> refreshing data from DB operations are cascaded
+DETACH -> detachment of object with EntityManager are cascaded
+
+FetchType [ JPA level ]
+EAGER -> loads an object with all the dependent objects
+LAZY -> loads an object only, not the dependent objects
+
+FetchMode [ Hibernate level ]
+SELECT -> gets overridden with FetchType [ Eager or Lazy ]
+    Eager loading
+        Fetches the data using SELECT queries
+    Lazy loading
+        Nothing gets fetched
+
+JOIN -> never overridden always Eager
+
+SELECT -> gets overridden with FetchType [ Eager or Lazy ] { only used with collection }
+    Eager loading
+        Fetches the data using SELECT queries
+    Lazy loading
+        Nothing gets fetched
+
+
+EAGER Loading -> query the dependent data using SELECT or JOINS
+@Fetch(FetchMode.SELECT) -> select queries
+@Fetch(FetchMode.JOIN) -> join queries
+
+
+Author
+    List<Book> - 10
+    List<Publisher> - 5
+    List<Event>- 12
+    List<Employee>- 3
+
+eager loading
+    select -> author
+    N select queries for N items { N + 1 }
+
+    combine into a single table - cached
+    query only once
+
+
+
