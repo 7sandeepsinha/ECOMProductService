@@ -16,3 +16,9 @@ public class ProductListResponseDTO {
         this.products = new ArrayList<>();
     }
 }
+
+/*
+        {
+            "products":[]
+        }
+ */
