@@ -9,6 +9,7 @@ import com.scaler.EcomProductService.exception.ProductNotFoundException;
 import com.scaler.EcomProductService.service.ProductService;
 import org.hibernate.type.descriptor.java.ObjectJavaType;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;

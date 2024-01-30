@@ -9,7 +9,8 @@ import com.scaler.EcomProductService.model.Product;
 import java.util.List;
 
 public interface ProductService {
-    ProductListResponseDTO getAllProducts();
+    ProductListResponseDTO getAllProducts() throws Exception;
+
     ProductResponseDTO getProductById(int id) throws ProductNotFoundException;
     ProductResponseDTO createProduct(ProductRequestDTO productRequestDTO);
     boolean deleteProduct(int id);

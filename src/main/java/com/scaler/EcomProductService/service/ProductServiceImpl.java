@@ -1,5 +1,6 @@
 package com.scaler.EcomProductService.service;
 
+import com.scaler.EcomProductService.client.UserServiceClient;
 import com.scaler.EcomProductService.dto.ProductListResponseDTO;
 import com.scaler.EcomProductService.dto.ProductRequestDTO;
 import com.scaler.EcomProductService.dto.ProductResponseDTO;
@@ -8,21 +9,23 @@ import com.scaler.EcomProductService.exception.ProductNotFoundException;
 import com.scaler.EcomProductService.mapper.ProductMapper;
 import com.scaler.EcomProductService.model.Product;
 import com.scaler.EcomProductService.repository.ProductRepository;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
+import java.util.Base64;
 import java.util.List;
 
 @Service("productService")
 public class ProductServiceImpl implements ProductService {
     private ProductRepository productRepository;
+    private final UserServiceClient userServiceClient;
 
-    public ProductServiceImpl(ProductRepository productRepository) {
+    public ProductServiceImpl(ProductRepository productRepository, UserServiceClient userServiceClient) {
         this.productRepository = productRepository;
+        this.userServiceClient = userServiceClient;
     }
 
     @Override
-    public ProductListResponseDTO getAllProducts() {
+    public ProductListResponseDTO getAllProducts() throws Exception {
         List<Product> products = productRepository.findAll();
         ProductListResponseDTO productListResponseDTO = ProductMapper.convertProductsToProductListResponseDTO(products);
         return productListResponseDTO;
@@ -62,4 +65,6 @@ public class ProductServiceImpl implements ProductService {
         ProductResponseDTO responseDTO = ProductMapper.convertProductToProductResponseDTO(product);
         return responseDTO;
     }
+
+
 }

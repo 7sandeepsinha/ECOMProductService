@@ -1,8 +1,9 @@
 package com.scaler.EcomProductService.controller;
 
-import com.scaler.EcomProductService.dto.ProductListResponseDTO;
-import com.scaler.EcomProductService.dto.ProductRequestDTO;
-import com.scaler.EcomProductService.dto.ProductResponseDTO;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.scaler.EcomProductService.client.UserServiceClient;
+import com.scaler.EcomProductService.dto.*;
+import com.scaler.EcomProductService.exception.InvalidTokenException;
 import com.scaler.EcomProductService.exception.ProductNotFoundException;
 import com.scaler.EcomProductService.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,14 +11,18 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Base64;
+
 @RestController
 public class ProductController {
 
     private final ProductService productService; // immutable
+    private final UserServiceClient userServiceClient;
 
     @Autowired // Autowired for constructor injection is optional from Spring 4.x+ onwards
-    public ProductController(@Qualifier("productService") ProductService productService) {
+    public ProductController(@Qualifier("productService") ProductService productService, UserServiceClient userServiceClient) {
         this.productService = productService;
+        this.userServiceClient = userServiceClient;
     }
 
     /**
@@ -28,7 +33,7 @@ public class ProductController {
  */
 
     @GetMapping("/products")
-    public ResponseEntity getAllProducts(){
+    public ResponseEntity getAllProducts(@RequestHeader("token") String token) throws Exception {
         /*
         ProductResponseDTO p1 =  new ProductResponseDTO();
         p1.setId(1);
@@ -49,12 +54,13 @@ public class ProductController {
         List<ProductResponseDTO> products = Arrays.asList(p1, p2);
         return ResponseEntity.ok(products);
         */
+        validateUser(token);
         ProductListResponseDTO response = productService.getAllProducts();
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/products/{id}")
-    public ResponseEntity getProductFromId(@PathVariable("id") int id) throws ProductNotFoundException {
+    public ResponseEntity getProductFromId(@PathVariable("id") int id, @RequestHeader("token") String token) throws ProductNotFoundException {
         /*
         ProductResponseDTO p1 =  new ProductResponseDTO();
         p1.setId(1);
@@ -80,7 +86,7 @@ public class ProductController {
     }
 
     @GetMapping("/products/title/{title}")
-    public ResponseEntity getProductFromTitle(@PathVariable("title") String title) throws ProductNotFoundException {
+    public ResponseEntity getProductFromTitle(@PathVariable("title") String title, @RequestHeader("token") String token) throws ProductNotFoundException {
         /*
         ProductResponseDTO p1 =  new ProductResponseDTO();
         p1.setId(1);
@@ -106,15 +112,29 @@ public class ProductController {
     }
 
     @PostMapping("/products")
-    public ResponseEntity createProduct(@RequestBody ProductRequestDTO productRequestDTO){
+    public ResponseEntity createProduct(@RequestBody ProductRequestDTO productRequestDTO, @RequestHeader("token") String token){
         ProductResponseDTO responseDTO = productService.createProduct(productRequestDTO);
         return ResponseEntity.ok(responseDTO);
     }
 
     @DeleteMapping("/products/{id}")
-    public ResponseEntity deleteProductById(@PathVariable("id") int id){
+    public ResponseEntity deleteProductById(@PathVariable("id") int id, @RequestHeader("token") String token){
         boolean response = productService.deleteProduct(id);
         return ResponseEntity.ok(response);
+    }
+
+    private void validateUser(String token) throws Exception {
+        String[] chunks = token.split("\\.");
+        Base64.Decoder decoder = Base64.getUrlDecoder();
+        String payload = new String(decoder.decode(chunks[1]));
+        ObjectMapper mapper = new ObjectMapper();
+        JwtPayloadDTO jwtPayload = mapper.readValue(payload, JwtPayloadDTO.class);
+        int userId = jwtPayload.getUserId();
+        ValidateTokenDTO validateTokenDTO = new ValidateTokenDTO(userId, token);
+        String result = userServiceClient.validateToken(validateTokenDTO);
+        if(!result.contains(SessionStatus.ACTIVE.name())){
+            throw new InvalidTokenException("Token is not valid");
+        }
     }
 }
 /*
